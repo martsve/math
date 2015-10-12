@@ -1,0 +1,6 @@
+D:\02 Workspace\00 CSharp\cmd\math\math\bin\Release\math.exe.config
+D:\02 Workspace\00 CSharp\cmd\math\math\bin\Release\math.exe
+D:\02 Workspace\00 CSharp\cmd\math\math\bin\Release\math.pdb
+D:\02 Workspace\00 CSharp\cmd\math\math\obj\Release\math.exe
+D:\02 Workspace\00 CSharp\cmd\math\math\obj\Release\math.pdb
+D:\02 Workspace\00 CSharp\cmd\math\math\obj\Release\math.csprojResolveAssemblyReference.cache
