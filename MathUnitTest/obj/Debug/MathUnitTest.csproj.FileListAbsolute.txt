@@ -1,0 +1,8 @@
+D:\Workspace\math\MathUnitTest\bin\Debug\MathUnitTest.dll
+D:\Workspace\math\MathUnitTest\bin\Debug\MathUnitTest.pdb
+D:\Workspace\math\MathUnitTest\bin\Debug\math.exe
+D:\Workspace\math\MathUnitTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+D:\Workspace\math\MathUnitTest\bin\Debug\math.pdb
+D:\Workspace\math\MathUnitTest\obj\Debug\MathUnitTest.csprojResolveAssemblyReference.cache
+D:\Workspace\math\MathUnitTest\obj\Debug\MathUnitTest.dll
+D:\Workspace\math\MathUnitTest\obj\Debug\MathUnitTest.pdb

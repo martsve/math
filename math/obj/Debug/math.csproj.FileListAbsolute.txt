@@ -4,3 +4,9 @@ D:\02 Workspace\00 CSharp\cmd\math\math\bin\Debug\math.pdb
 D:\02 Workspace\00 CSharp\cmd\math\math\obj\Debug\math.csprojResolveAssemblyReference.cache
 D:\02 Workspace\00 CSharp\cmd\math\math\obj\Debug\math.exe
 D:\02 Workspace\00 CSharp\cmd\math\math\obj\Debug\math.pdb
+D:\Workspace\math\math\bin\Debug\math.exe.config
+D:\Workspace\math\math\obj\Debug\math.exe
+D:\Workspace\math\math\obj\Debug\math.pdb
+D:\Workspace\math\math\obj\Debug\math.csprojResolveAssemblyReference.cache
+D:\Workspace\math\math\bin\Debug\math.exe
+D:\Workspace\math\math\bin\Debug\math.pdb

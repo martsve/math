@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "math", "math\math.csproj", "{EBFE51F0-6553-4931-8ED9-5D2F14F9B444}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathUnitTest", "MathUnitTest\MathUnitTest.csproj", "{87657AE7-DC05-4363-92BA-B28C9DA575AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,10 @@ Global
 		{EBFE51F0-6553-4931-8ED9-5D2F14F9B444}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBFE51F0-6553-4931-8ED9-5D2F14F9B444}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBFE51F0-6553-4931-8ED9-5D2F14F9B444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87657AE7-DC05-4363-92BA-B28C9DA575AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87657AE7-DC05-4363-92BA-B28C9DA575AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87657AE7-DC05-4363-92BA-B28C9DA575AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87657AE7-DC05-4363-92BA-B28C9DA575AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
