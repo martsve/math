@@ -377,13 +377,13 @@ namespace MathEvaluation
 
         void LoadStandardOperators()
         {
-            AddOperator('+', (x) => x[0] + x[1], 2, 2, Associative.LEFT);
-            AddOperator('-', (x) => x[0] - x[1], 2, 2, Associative.LEFT);
-            AddOperator('*', (x) => x[0] * x[1], 2, 3, Associative.LEFT);
-            AddOperator('/', (x) => x[0] / x[1], 2, 3, Associative.LEFT);
-            AddOperator('%', (x) => x[0] % x[1], 2, 3, Associative.LEFT);
-            AddOperator('^', (x) => Math.Pow(x[0], x[1]), 2, 4, Associative.RIGHT);
-            AddOperator('!', (x) => fact((int)x[0]), 1, 10);
+            AddOperator('+', (x) => x[0] + x[1], 2, 2);
+            AddOperator('-', (x) => x[0] - x[1], 2, 2);
+            AddOperator('*', (x) => x[0] * x[1], 2, 3);
+            AddOperator('/', (x) => x[0] / x[1], 2, 3);
+            AddOperator('%', (x) => x[0] % x[1], 2, 3);
+            AddOperator('^', (x) => Math.Pow(x[0], x[1]), 2, 4, Associative.LEFT);
+            AddOperator('!', (x) => fact(x[0]), 1, 10);
 
             AddOperator('>', (x) => x[0] > x[1] ? 1 : 0, 2, 1);
             AddOperator('<', (x) => x[0] < x[1] ? 1 : 0, 2, 1);
@@ -393,12 +393,15 @@ namespace MathEvaluation
             AddOperator('|', (x) => x[0] != 0 || x[1] != 0 ? 1 : 0, 2, 1);
         }
 
-        int fact(int y)
+        double fact(double y)
         {
-            if (y > 1)
-                return y * fact(y - 1);
-            else
-                return y;
+            double val = Math.Floor(y);
+            while (y > 1)
+            {
+                val = val * (y - 1);
+                y--;
+            }
+            return val;
         }
 
     }
@@ -643,7 +646,10 @@ namespace MathEvaluation
         {
             values.Reverse();
             if (MathOperators.operators.ContainsKey(op[0]))
-                return MathOperators.operators[op[0]].Function.Invoke(values);
+            {
+                double val = MathOperators.operators[op[0]].Function.Invoke(values);
+                return val;
+            }
             else
                 throw new MissingMathOperationException(op);
         }
