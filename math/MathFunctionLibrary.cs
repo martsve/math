@@ -12,36 +12,7 @@ namespace math
     /// </summary>
     public class MathFunctionLibrary
     {
-        public class Function
-        {
-            private readonly MathFunction _mfunc;
-            private readonly ObjectFunction _ofunc;
-            private readonly Type _t;
-            public Function(object o)
-            {
-                if (o is MathFunction function)
-                {
-                    _mfunc = function;
-                    _t = typeof(MathFunction);
-                }
-                else
-                {
-                    _ofunc = (ObjectFunction)o;
-                    _t = typeof(ObjectFunction);
-                }
-            }
-            public double Invoke(List<object> inp)
-            {
-                if (_t == typeof(MathFunction))
-                {
-                    return _mfunc.Invoke(inp.Select(x => (double)x).ToList());
-                }
-
-                return _ofunc.Invoke(inp);
-            }
-        }
-
-        public Dictionary<string, Function> Functions = new Dictionary<string, Function>();
+        public Dictionary<string, MathFunction> Functions = new Dictionary<string, MathFunction>();
 
         public MathFunctionLibrary()
         {
@@ -50,13 +21,7 @@ namespace math
 
         public void Add(string name, MathFunction func)
         {
-            var f = new Function(func);
-            Functions.Add(name, f);
-        }
-        public void Add(string name, ObjectFunction func)
-        {
-            var f = new Function(func);
-            Functions.Add(name, f);
+            Functions.Add(name, func);
         }
 
         private void LoadStandardFunctions()
@@ -97,11 +62,8 @@ namespace math
             Add("stdev", new MathFunction(StDev));
             Add("kurt", new MathFunction(Kurtosis));
             Add("skew", new MathFunction(Skew));
-
-            Add("chr", (List<object> x) => (int)(x[0].ToString()[0]));
-            Add("len", (List<object> x) => x[0].ToString().Length);
-            Add("equal", (List<object> x) => x[0].ToString() == x[1].ToString() ? 1 : 0);
-            Add("count", (List<object> x) => x.Count);
+            
+            Add("count", x => x.Count);
         }
 
         private double Amax(List<double> values)

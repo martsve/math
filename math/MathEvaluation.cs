@@ -344,16 +344,6 @@ namespace math
                     continue;
                 }
 
-
-                m = Regex.Match(expr, "^\"([^\"]+)\"");
-                if (m.Success)
-                {
-                    var func = m.Groups[1].Value;
-                    tokens.Add(new Token(func, TokenType.String));
-                    expr = expr.Substring(func.Length+2);
-                    continue;
-                }
-
                 m = Regex.Match(expr, @"^([a-zA-Z]+)");
                 if (m.Success)
                 {

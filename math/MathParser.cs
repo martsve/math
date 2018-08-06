@@ -27,7 +27,7 @@ namespace math
         /// <returns></returns>
         public double PostfixAlgorithm(List<Token> rpn, out List<string> history)
         {
-            var stack = new Stack<Object>();
+            var stack = new Stack<double>();
             history = new List<string>();
         
             var postfix = "Postfix: ";
@@ -70,12 +70,7 @@ namespace math
                         throw new MathEvaluationException("Incorrect formated number: " + o.Value);
                     }
                 }
-                // If the token is a value
-                if (o.Type == TokenType.String)
-                {
-                    // Push it onto the stack.
-                    stack.Push(o.Value);
-                }
+
                 // Otherwise, the token is an operator (operator here includes both operators and functions).
                 else if (o.Type == TokenType.Function || o.Type == TokenType.Operator)
                 {
@@ -103,7 +98,7 @@ namespace math
                     var opr = o.Value.ToLower();
 
                     // Else, Pop the top n values from the stack.
-                    var v = new List<object>();
+                    var v = new List<double>();
                     for (var i = 0; i < n; i++)
                     {
                         var ov = stack.Pop();
@@ -132,10 +127,7 @@ namespace math
             if (stack.Count == 1)
             {
                 // That value is the result of the calculation.
-                var o = stack.Peek();
-                if (o is double)
-                    return (double)stack.Peek();
-                throw new Exception("Invalid return type: string=" + o);
+                return stack.Peek();
             }
             // Otherwise, there are more values in the stack
 
@@ -275,7 +267,7 @@ namespace math
             return queue;
         }
         
-        private double UseFunction(string op, List<object> values)
+        private double UseFunction(string op, List<double> values)
         {
             values.Reverse();
 

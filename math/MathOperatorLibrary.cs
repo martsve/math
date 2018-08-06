@@ -12,6 +12,13 @@ namespace math
     /// </summary>
     public class MathOperatorLibrary
     {
+        private readonly int _equalTolerance;
+
+        public MathOperatorLibrary(int equalTolerance = 12)
+        {
+            _equalTolerance = equalTolerance;
+            LoadStandardOperators();
+        }
 
         public class Operator
         {
@@ -38,11 +45,6 @@ namespace math
             Operators.Add(name, op);
         }
 
-        public MathOperatorLibrary()
-        {
-            LoadStandardOperators();
-        }
-
         private void LoadStandardOperators()
         {
             AddOperator('+', (x) => x[0] + x[1], 2, 2);
@@ -55,10 +57,17 @@ namespace math
 
             AddOperator('>', (x) => x[0] > x[1] ? 1 : 0, 2, 1);
             AddOperator('<', (x) => x[0] < x[1] ? 1 : 0, 2, 1);
-            AddOperator('=', (x) => x[0] == x[1] ? 1 : 0, 2, 1);
+            AddOperator('=', (x) => Approximatly(x[0], x[1]) ? 1 : 0, 2, 1);
 
-            AddOperator('&', (x) => x[0] != 0 && x[1] != 0 ? 1 : 0, 2, 1);
-            AddOperator('|', (x) => x[0] != 0 || x[1] != 0 ? 1 : 0, 2, 1);
+            AddOperator('&', (x) => !Approximatly(x[0], 0) && !Approximatly(x[1], 0) ? 1 : 0, 2, 1);
+            AddOperator('|', (x) => !Approximatly(x[0], 0) || !Approximatly(x[1], 0) ? 1 : 0, 2, 1);
+        }
+
+        private bool Approximatly(double a, double b)
+        {
+            var dif = Math.Abs(a - b);
+            var limit = 1.0 / Math.Pow(10.0, _equalTolerance);
+            return dif < limit;
         }
 
         private double Fact(double y)

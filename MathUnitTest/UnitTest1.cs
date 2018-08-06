@@ -79,7 +79,29 @@ namespace MathUnitTest
             Assert.AreEqual("1+(2-(-3))".Calculate(), 6);
         }
 
-        private bool Approx(double a, double b, int significance = 3)
+        [TestMethod]
+        public void TestEqual()
+        {
+            Assert.AreEqual("1.99999999999=2".Calculate(), 0);
+            Assert.AreEqual("1.999999999999999=2".Calculate(), 1);
+        }
+
+
+        [TestMethod]
+        public void TestAnd()
+        {
+            Assert.AreEqual("0.000000000001 & 1".Calculate(), 1);
+            Assert.AreEqual("0.000000000000000001 & 1".Calculate(), 0);
+        }
+        
+        [TestMethod]
+        public void TestOr()
+        {
+            Assert.AreEqual("0.000000000001 | 0".Calculate(), 1);
+            Assert.AreEqual("0.0000000000000000001 | 0".Calculate(), 0);
+        }
+
+        private bool Approx(double a, double b, int significance = 9)
         {
             return Math.Abs((a-b)/b) < 1 / Math.Pow(10, significance);
         }
