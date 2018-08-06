@@ -17,9 +17,10 @@ namespace math
     /// <summary>
     ///  Evaluates Mathematical Expressions
     /// </summary>
-    internal class MathEval
+    public class MathEval
     {
         public bool Debug { get; set; }
+        public List<string> History { get; set; } = new List<string>();
 
         private bool _evaluated = false;
         private string _expression = "";
@@ -97,9 +98,17 @@ namespace math
 
             var parser = new MathParser(_mathOperators, _mathFunctions);
             var rpn = parser.ShuntingYardAlgorithm(tokens);
-            var val = parser.PostfixAlgorithm(rpn);
+            var val = parser.PostfixAlgorithm(rpn, out var history);
 
-            if (Debug) Console.WriteLine("{0,-10}{1,-10}{2,-20}\n", "Result", "", val);
+            if (Debug)
+            {
+                foreach (var line in history)
+                {
+                    Console.WriteLine(line);
+                }
+
+                Console.WriteLine("{0,-10}{1,-10}{2,-20}\n", "Result", "", val);
+            }
 
             _result = val;
 

@@ -23,26 +23,23 @@ namespace math
         /// https://en.wikipedia.org/wiki/Reverse_Polish_notation
         /// </summary>
         /// <param name="rpn"></param>
+        /// <param name="history"></param>
         /// <returns></returns>
-        public double PostfixAlgorithm(List<Token> rpn)
+        public double PostfixAlgorithm(List<Token> rpn, out List<string> history)
         {
-
             var stack = new Stack<Object>();
-
-            if (Debug)
+            history = new List<string>();
+        
+            var postfix = "Postfix: ";
+            foreach (var t in rpn)
             {
-                Console.Write("Postfix:  ");
-                foreach (var t in rpn)
-                {
-                    if (t.Type == TokenType.Args)
-                        Console.Write("{0}>", t.Value);
-                    else
-                        Console.Write("{0} ", t.Value);
-                }
-                Console.WriteLine();
-                if (Debug) Console.WriteLine("\nInput     Operation    Stack");
+                postfix += t.Type == TokenType.Args ? $"{t.Value}>" : $"{t.Value} ";
             }
 
+            history.Add(postfix);
+            history.Add("");
+            history.Add("\nInput     Operation    Stack");
+       
             var nargs = 0;
 
             // While there are input tokens left
@@ -50,16 +47,14 @@ namespace math
 
             foreach (var o in rpn)
             {
-                if (Debug)
+                var text = $"{o.Value,-10}";
+                text += $"{o.Type,-10}";
+                foreach (var v in stack)
                 {
-                    Console.Write("{0,-10}", o.Value);
-                    Console.Write("{0,-10}", o.Type.ToString());
-                    foreach (var v in stack)
-                    {
-                        Console.Write("{0,-10}\n{1,-20}", v, "");
-                    }
-                    Console.WriteLine();
+                    text += $"{v,-10}\n{"",-20}";
                 }
+                history.Add(text);
+                history.Add("");
 
                 // If the token is a value
                 if (o.Type == TokenType.Number)
@@ -146,7 +141,6 @@ namespace math
 
             // (Error) The user input has too many values.
             throw new MathEvaluationException("The user input has too many values");
-
         }
 
         /// <summary>

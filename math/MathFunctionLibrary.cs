@@ -161,7 +161,7 @@ namespace math
             return (dMultiplier * dInterim - dSubtractor);
         }
 
-        private double Fact(double v) { return Gamma(v + 1); }
+        private double Fact(double v) { return Math.Round(Gamma((int)v + 1), 0); }
 
         private double Gamma(double v)
         {

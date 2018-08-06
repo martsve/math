@@ -5,30 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace math
-{public static class MathExtensions
+{
+    public static class MathExtensions
     {
         /// <summary>
         ///  Math Expression Evaluator
         /// </summary>
-        /// <param name="expr"></param>
+        /// <param name="expr">The expression</param>
         /// <returns></returns>
-        public static double Evaulate(this string expr)
+        public static double Calculate(this string expr)
         {
-            var engine = new MathEval(expr);
-            return engine.Evaluate();
-        }
-
-        /// <summary>
-        /// Math Expression Evaluator
-        /// </summary>
-        /// <param name="expr"></param>
-        /// <param name="replacements"></param>
-        /// <returns></returns>
-        public static double Evaulate(this string expr, Dictionary<string, double> replacements)
-        {
-            var engine = new MathEval(expr);
-            engine.AddReplacement(replacements);
-            return engine.Evaluate();
+            return new MathEval(expr).Evaluate();
         }
     }
 }
