@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
-using MathEvaluation;
+using math;
 
 namespace SimpleMath
 {
-    class Program
+    internal class Program
     {
-        enum Option {
+        private enum Option {
             DoMath,
             ShowHelp,
         }
@@ -26,33 +26,37 @@ namespace SimpleMath
         }
 
 
-        static void Main(string[] args) 
+        private static void Main(string[] args) 
         {
-            Option perform = Option.ShowHelp;
+            var perform = Option.ShowHelp;
 
             // check pipe
-            String pipedText = "";
+            var pipedText = "";
             bool isKeyAvailable;
-            bool piped = false;
-            try { isKeyAvailable = System.Console.KeyAvailable; }
-            catch { pipedText = System.Console.In.ReadToEnd(); piped = true; }
+            var piped = false;
+            try { isKeyAvailable = Console.KeyAvailable; }
+            catch { pipedText = Console.In.ReadToEnd(); piped = true; }
 
-            string expr = "";
-            string inpfile = "";
-            string format = "{0}";
+            var expr = "";
+            var inpfile = "";
+            var inpdata = "";
+            var format = "{0}";
 
-            bool showAll = true;
-            string expr2 = "";
-            bool showSteps = false;
+            var showAll = true;
+            var expr2 = "";
+            var showSteps = false;
 
             // check input arguments
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
 
-                if (args[i] == "-help" || args[i] == "--help" || args[i] == "-?") 
+                if (args[i] == "-help" || args[i] == "--help" || args[i] == "-?")
+                {
                     perform = Option.ShowHelp;
+                    break;
+                }
 
-                else if (args[i] == "-f")
+                if (args[i] == "-f")
                 {
                     if (args.Length < i + 1) Error("Insufficient args -f");
                     format = args[i + 1];
@@ -64,12 +68,19 @@ namespace SimpleMath
                     inpfile = args[i + 1];
                     i++;
                 }
+                else if (args[i] == "-i")
+                {
+                    if (args.Length < i + 1) Error("Insufficient args -i");
+                    inpdata = args[i + 1];
+                    i++;
+                }
                 else if (args[i] == "-e")
                 {
                     if (args.Length < i + 1) Error("Insufficient args for -e");
                     expr2 = args[i + 1];
                     showAll = false;
                     i++;
+                    perform = Option.DoMath;
                 }
                 else if (args[i] == "-x")
                 {
@@ -83,7 +94,7 @@ namespace SimpleMath
                 {
                     perform = Option.DoMath;
                     expr += " " + args[i];
-                }            
+                }
             }
 
             // Print header
@@ -95,9 +106,10 @@ namespace SimpleMath
              https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx
              Scientific: {0:0.0000E+00}
              Decimal, optional decimals: {0:0.##########}
-             With text: "+"\"Ans={0:0.00000}\""+ @"
+             With text: " + "\"Ans={0:0.00000}\"" + @"
 
   -o FILE    Use FILE as input to EXPRESSION
+  -i DATA    Use DATA as input to EXPRESSION (comma-seperated)
   -x         Only write last line
   -d         Show evaluation steps
 
@@ -108,6 +120,7 @@ namespace SimpleMath
 Calcualte the math expression given in EXPRESSION. 
 
 If FILE or pipe is given, EXPRESSION is evaulated for each given line.
+If DATA is given, EXPRESSION is evalueted for each given line in DATA. Seperate lines with ','.
 $1, $2,.. returns the delimited numbers from each given line.
 $-1, $-2,.. returns the reverse delimited numbers from each given line.
 $0 is equal to the previous evaluated line.
@@ -120,6 +133,7 @@ Simple functions:
 
 Multiple argument functions:
   sum,max,min,amin,amax,stdev,skew,kurt,avrg,round
+  count
 
 Operators:    ^,*,/,+,-     standard math operators
                 !,%         factorial and reminder
@@ -139,9 +153,17 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
                 }
                 catch { Error("Unable to open file: " + inpfile); }
             }
+            else if (inpdata != "")
+            {
+                try
+                {
+                    piped = true;
+                    pipedText = inpdata.Replace(",", "\n");
+                }
+                catch { Error("Unable to open file: " + inpfile); }
+            }
 
-
-            List<string> evalLines = new List<string>();
+            var evalLines = new List<string>();
             if (piped)
             {
                 evalLines = pipedText.Split('\n').ToList();
@@ -152,15 +174,20 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
             }
 
             double last = 0;
-            int count = 0;
-            List<double> results = new List<double>();
+            var count = 0;
+            var results = new List<double>();
 
-            MathEvalWrapper eval = new MathEvalWrapper(showSteps);
-
-            foreach (string input in evalLines)
+            if (string.IsNullOrEmpty(expr))
             {
-                string line = input.Replace("\r", "").Replace(",", " ").Replace("\t", " ").ToLower().Trim();
-                line = System.Text.RegularExpressions.Regex.Replace(line, @"\s+", " ");
+                expr = "$1";
+            }
+
+            var eval = new MathEvalWrapper(showSteps);
+
+            foreach (var input in evalLines)
+            {
+                var line = input.Replace("\r", "").Replace(",", " ").Replace("\t", " ").ToLower().Trim();
+                line = Regex.Replace(line, @"\s+", " ");
 
                 if (line.StartsWith("#")) continue;
                 if (line.Length == 0) continue;
@@ -168,7 +195,7 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
                 count++;
 
                 eval.SetExpression(expr, line);
-                double res = eval.GetResult();
+                var res = eval.GetResult();
                 results.Add(res);
 
                 if (showAll)
@@ -205,49 +232,45 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
         }
 
 
+        private class MathEvalWrapper {
+            private readonly MathEval _engine = new MathEval();
 
-
-
-        class MathEvalWrapper {
-
-            MathEval engine = new MathEval();
-
-            string expression;
-            bool evaluated = false;
-            double value = 0;
-            int line = 0;
-            List<double> results = new List<double>();
-            bool useLineNumber = true;
+            private string _expression;
+            private bool _evaluated = false;
+            private double _value = 0;
+            private int _line = 0;
+            private readonly List<double> _results = new List<double>();
+            private bool _useLineNumber = true;
 
             public void LockLineNumber()
             {
-                useLineNumber = false;
+                _useLineNumber = false;
             }
 
             public void SetExpression(string input, string instr)
             {
-                string[] args = instr.Split(' ');
+                var args = instr.Split(' ');
 
-                engine.AddReplacement("L", instr);
-                engine.SetArguments(args);
+                _engine.AddReplacement("L", instr);
+                _engine.SetArguments(args);
 
                 SetExpression(input);
             }
 
             public void SetExpression(string input) {
-                evaluated = false;
-                if (useLineNumber)
-                    line += 1;
+                _evaluated = false;
+                if (_useLineNumber)
+                    _line += 1;
 
-                string arr = string.Join(",", results.ToArray());
+                var arr = string.Join(",", _results.ToArray());
                 if (arr.Length == 0)
                     arr = "0";
 
-                engine.AddReplacement("0", value);
-                engine.AddReplacement("N", line);
-                engine.AddReplacement("A", arr);
+                _engine.AddReplacement("0", _value);
+                _engine.AddReplacement("N", _line);
+                _engine.AddReplacement("A", arr);
 
-                expression = input;
+                _expression = input;
             }
 
             public MathEvalWrapper()
@@ -258,7 +281,7 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
 
             public MathEvalWrapper(bool showSteps) : this()
             {
-                engine.debug = showSteps;
+                _engine.Debug = showSteps;
             }
 
             public MathEvalWrapper(string input, bool showSteps)
@@ -268,31 +291,31 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
             }
 
             public double GetResult() {
-                if (!evaluated)
+                if (!_evaluated)
                 {
                     Evaluate();
                 }
-                return value;
+                return _value;
             }
 
             public double Evaluate()
             {
                 try
                 {
-                    value = engine.EvaluateExpression(expression);
-                    results.Add(value);
-                    return value;
+                    _value = _engine.EvaluateExpression(_expression);
+                    _results.Add(_value);
+                    return _value;
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine("Unable to evaluate expression:\n" + expression.Trim() + "\n");
+                    Console.Error.WriteLine("Unable to evaluate expression:\n" + _expression.Trim() + "\n");
 
-                    if (!engine.debug)
+                    if (!_engine.Debug)
                     {
                         try
                         {
-                            engine.debug = true;
-                            value = engine.EvaluateExpression(expression);
+                            _engine.Debug = true;
+                            _value = _engine.EvaluateExpression(_expression);
                         }
                         catch
                         {

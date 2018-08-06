@@ -6,3 +6,14 @@ D:\Workspace\math\MathUnitTest\bin\Debug\math.pdb
 D:\Workspace\math\MathUnitTest\obj\Debug\MathUnitTest.csprojResolveAssemblyReference.cache
 D:\Workspace\math\MathUnitTest\obj\Debug\MathUnitTest.dll
 D:\Workspace\math\MathUnitTest\obj\Debug\MathUnitTest.pdb
+E:\Utilities\math\MathUnitTest\bin\Debug\MathUnitTest.dll
+E:\Utilities\math\MathUnitTest\bin\Debug\MathUnitTest.pdb
+E:\Utilities\math\MathUnitTest\bin\Debug\math.exe
+E:\Utilities\math\MathUnitTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\Utilities\math\MathUnitTest\bin\Debug\math.pdb
+E:\Utilities\math\MathUnitTest\bin\Debug\math.exe.config
+E:\Utilities\math\MathUnitTest\obj\Debug\MathUnitTest.csprojAssemblyReference.cache
+E:\Utilities\math\MathUnitTest\obj\Debug\MathUnitTest.csproj.CoreCompileInputs.cache
+E:\Utilities\math\MathUnitTest\obj\Debug\MathUnitTest.csproj.CopyComplete
+E:\Utilities\math\MathUnitTest\obj\Debug\MathUnitTest.dll
+E:\Utilities\math\MathUnitTest\obj\Debug\MathUnitTest.pdb

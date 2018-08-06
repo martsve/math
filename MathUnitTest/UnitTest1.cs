@@ -1,6 +1,6 @@
 ﻿using System;
+using math;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MathEvaluation;
 
 namespace MathUnitTest
 {
@@ -17,8 +17,8 @@ namespace MathUnitTest
         [TestMethod]
         public void TestMultiply()
         {
-            Assert.IsTrue(approx("3*7*23*1.1123".Evaulate(), 537.2409));
-            Assert.IsTrue(approx("23/56*12/7*12/-3".Evaulate(), -2.816326531));
+            Assert.IsTrue(Approx("3*7*23*1.1123".Evaulate(), 537.2409));
+            Assert.IsTrue(Approx("23/56*12/7*12/-3".Evaulate(), -2.816326531));
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace MathUnitTest
         [TestMethod]
         public void TestFactorial3()
         {
-            Assert.IsTrue(approx("4!!".Evaulate(), 6.2044E+23));
+            Assert.IsTrue(Approx("4!!".Evaulate(), 6.2044E+23));
 
         }
 
@@ -65,17 +65,23 @@ namespace MathUnitTest
         }
 
         [TestMethod]
+        public void TestMinusStickingToNumber1()
+        {
+            Assert.AreEqual("1--1".Evaulate(), 2);
+            Assert.AreEqual("2-cos(0)".Evaulate(), 1);
+            Assert.AreEqual("-cos(0)".Evaulate(), -1);
+            Assert.AreEqual("-abs(-2)^2".Evaulate(), -4);
+        }
+
+        [TestMethod]
         public void TestPara()
         {
             Assert.AreEqual("1+(2-(-3))".Evaulate(), 6);
         }
 
-        bool approx(double a, double b, int significance = 3)
+        private bool Approx(double a, double b, int significance = 3)
         {
             return Math.Abs((a-b)/b) < 1 / Math.Pow(10, significance);
         }
-
-
     }
-
 }

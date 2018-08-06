@@ -10,3 +10,10 @@ D:\Workspace\math\math\obj\Debug\math.pdb
 D:\Workspace\math\math\obj\Debug\math.csprojResolveAssemblyReference.cache
 D:\Workspace\math\math\bin\Debug\math.exe
 D:\Workspace\math\math\bin\Debug\math.pdb
+E:\Utilities\math\math\bin\Debug\math.exe.config
+E:\Utilities\math\math\bin\Debug\math.exe
+E:\Utilities\math\math\bin\Debug\math.pdb
+E:\Utilities\math\math\obj\Debug\math.csprojAssemblyReference.cache
+E:\Utilities\math\math\obj\Debug\math.csproj.CoreCompileInputs.cache
+E:\Utilities\math\math\obj\Debug\math.exe
+E:\Utilities\math\math\obj\Debug\math.pdb
