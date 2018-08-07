@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace math
 {
-
     /// <summary>
     ///  Libraray of default functions for Mathematical Expressions
     /// </summary>
@@ -41,29 +40,34 @@ namespace math
 
         public void AddOperator(char name, MathFunction func, int parameters = 2, int precedence = 2, Associative assoc = Associative.Left)
         {
+            if (new[] { '(', ')', ',' }.Contains(name))
+            {
+                throw new MathOperatorException("Unable to add operators named '(', ')' or ','");
+            }
+
             var op = new Operator(name, func, parameters, precedence, assoc);
             Operators.Add(name, op);
         }
 
         private void LoadStandardOperators()
         {
-            AddOperator('+', (x) => x[0] + x[1], 2, 2);
-            AddOperator('-', (x) => x[0] - x[1], 2, 2);
-            AddOperator('*', (x) => x[0] * x[1], 2, 3);
-            AddOperator('/', (x) => x[0] / x[1], 2, 3);
-            AddOperator('%', (x) => x[0] % x[1], 2, 3);
-            AddOperator('^', (x) => Math.Pow(x[0], x[1]), 2, 4, Associative.Left);
-            AddOperator('!', (x) => Fact(x[0]), 1, 10);
+            AddOperator('+', x => x[0] + x[1], 2, 2);
+            AddOperator('-', x => x[0] - x[1], 2, 2);
+            AddOperator('*', x => x[0] * x[1], 2, 3);
+            AddOperator('/', x => x[0] / x[1], 2, 3);
+            AddOperator('%', x => x[0] % x[1], 2, 3);
+            AddOperator('^', x => Math.Pow(x[0], x[1]), 2, 4, Associative.Left);
+            AddOperator('!', x => Fact(x[0]), 1, 10);
 
-            AddOperator('>', (x) => x[0] > x[1] ? 1 : 0, 2, 1);
-            AddOperator('<', (x) => x[0] < x[1] ? 1 : 0, 2, 1);
-            AddOperator('=', (x) => Approximatly(x[0], x[1]) ? 1 : 0, 2, 1);
+            AddOperator('>', x => x[0] > x[1] ? 1 : 0, 2, 1);
+            AddOperator('<', x => x[0] < x[1] ? 1 : 0, 2, 1);
+            AddOperator('=', x => Equalish(x[0], x[1]) ? 1 : 0, 2, 1);
 
-            AddOperator('&', (x) => !Approximatly(x[0], 0) && !Approximatly(x[1], 0) ? 1 : 0, 2, 1);
-            AddOperator('|', (x) => !Approximatly(x[0], 0) || !Approximatly(x[1], 0) ? 1 : 0, 2, 1);
+            AddOperator('&', x => !Equalish(x[0], 0) && !Equalish(x[1], 0) ? 1 : 0, 2, 1);
+            AddOperator('|', x => !Equalish(x[0], 0) || !Equalish(x[1], 0) ? 1 : 0, 2, 1);
         }
 
-        private bool Approximatly(double a, double b)
+        private bool Equalish(double a, double b)
         {
             var dif = Math.Abs(a - b);
             var limit = 1.0 / Math.Pow(10.0, _equalTolerance);

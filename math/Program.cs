@@ -182,7 +182,7 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
                 expr = "$1";
             }
 
-            var eval = new MathEvalWrapper(showSteps);
+            var eval = new MathEvalWrapper();
 
             foreach (var input in evalLines)
             {
@@ -196,6 +196,15 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
 
                 eval.SetExpression(expr, line);
                 var res = eval.GetResult();
+
+                if (showSteps)
+                {
+                    foreach (var entry in eval.History)
+                    {
+                        Console.WriteLine(entry);
+                    }
+                }
+
                 results.Add(res);
 
                 if (showAll)
@@ -219,6 +228,7 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
                     eval.SetExpression(expr2);
                     last = eval.GetResult();
                 }
+
                 try
                 {
                     Console.WriteLine(format, last);
@@ -241,6 +251,8 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
             private int _line = 0;
             private readonly List<double> _results = new List<double>();
             private bool _useLineNumber = true;
+
+            public List<string> History => _engine.History;
 
             public void LockLineNumber()
             {
@@ -276,16 +288,9 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
             public MathEvalWrapper()
             {
 
-            }
+            }           
 
-
-            public MathEvalWrapper(bool showSteps) : this()
-            {
-                _engine.Debug = showSteps;
-            }
-
-            public MathEvalWrapper(string input, bool showSteps)
-                : this(showSteps)
+            public MathEvalWrapper(string input)
             {
                 SetExpression(input);
             }
@@ -310,19 +315,13 @@ Version 1.0. Report bugs to <martsve@gmail.com>");
                 {
                     Console.Error.WriteLine("Unable to evaluate expression:\n" + _expression.Trim() + "\n");
 
-                    if (!_engine.Debug)
+                    foreach (var line in _engine.History)
                     {
-                        try
-                        {
-                            _engine.Debug = true;
-                            _value = _engine.EvaluateExpression(_expression);
-                        }
-                        catch
-                        {
-                        }
+                        Console.WriteLine(line);
                     }
-
+                    
                     Error(ex.ToString());
+
                     return 0;
                 }
 

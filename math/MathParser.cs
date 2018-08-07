@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace math
@@ -18,6 +19,136 @@ namespace math
         }
 
         public bool Debug { get; set; }
+        
+        public List<Token> GetTokens(string expr)
+        {
+            var tokens = new List<Token>();
+
+            expr = Regex.Replace(expr, @"^-([a-zA-Z(])", "-1*$1");
+            expr = Regex.Replace(expr, @"\(-([a-zA-Z(])", "(-1*$1");
+            expr = Regex.Replace(expr, @"\,-([a-zA-Z(])", ",-1*$1");
+
+            // fix for oper
+            var reg = new Regex(@"([^0-9)])-([a-zA-Z]+\(|\()");
+            while (reg.IsMatch(expr))
+            {
+                var cm = reg.Match(expr);
+                if (cm.Success)
+                {
+                    expr = InsertBracket(expr, cm.Groups[1].Value, cm.Groups[2].Value);
+                }
+            }
+
+            if (Debug) Console.WriteLine("Fixed:   {0}", expr);
+
+            var specials = TokenTypes();
+
+            while (expr.Length > 0)
+            {
+                var c = expr[0];
+
+                // custom operators with 1 parameter might fuck this up when followed by + or -
+                var doubleOp = true;
+                if (tokens.Count > 0 && tokens[tokens.Count - 1].Type == TokenType.Operator)
+                    if (_mathOperators.Operators.ContainsKey(tokens[tokens.Count - 1].Value[0]))
+                        if (_mathOperators.Operators[tokens[tokens.Count - 1].Value[0]].Parameters == 1)
+                            doubleOp = false;
+
+                Match m;
+                if (tokens.Count == 0 ||
+                    tokens[tokens.Count - 1].Type == TokenType.Operator && doubleOp ||
+                    tokens[tokens.Count - 1].Type == TokenType.ListSep ||
+                    tokens[tokens.Count - 1].Type == TokenType.Open)
+                {
+
+                    m = Regex.Match(expr, @"^[-+]{0,1}([0-9.]+([eE][\-\+]{0,1}[0-9.]+|))");
+                    if (m.Success)
+                    {
+                        var value = m.Groups[0].Value;
+                        tokens.Add(new Token(value, TokenType.Number));
+                        expr = expr.Substring(value.Length);
+                        continue;
+                    }
+                }
+
+                if (specials.ContainsKey(c))
+                {
+                    tokens.Add(new Token(c.ToString(), specials[c]));
+                    expr = expr.Substring(1);
+                    continue;
+                }
+
+                if (_mathOperators.Operators.ContainsKey(c))
+                {
+                    tokens.Add(new Token(c.ToString(), TokenType.Operator));
+                    expr = expr.Substring(1);
+                    continue;
+                }
+
+                m = Regex.Match(expr, @"^([a-zA-Z]+)");
+                if (m.Success)
+                {
+                    var func = m.Groups[0].Value;
+                    tokens.Add(new Token(func, TokenType.Function));
+                    expr = expr.Substring(func.Length);
+                    continue;
+                }
+
+                m = Regex.Match(expr, @"^([0-9.]+([eE][\-\+]{0,1}[0-9.]+|))");
+                if (m.Success)
+                {
+                    var value = m.Groups[0].Value;
+                    tokens.Add(new Token(value, TokenType.Number));
+                    expr = expr.Substring(value.Length);
+                    continue;
+                }
+
+                if (expr[0] == ' ')
+                    expr = expr.Substring(1);
+                else
+                    throw new MathOperatorException("Invalid at position 1: " + expr);
+            }
+
+            return tokens;
+        }
+
+        private Dictionary<char, TokenType> TokenTypes()
+        {
+            var specials = new Dictionary<char, TokenType>
+            {
+                {'(', TokenType.Open},
+                {')', TokenType.Close},
+                {',', TokenType.ListSep}
+            };
+            return specials;
+        }
+
+        /// <summary>
+        ///  Function to insert two parathesis' into a math equation to turn -func(..) into (-1*func(..))
+        /// </summary>
+        private string InsertBracket(string outer, string p1, string p2)
+        {
+            var find = p1 + "-" + p2;
+            var pos = outer.IndexOf(find);
+            var replace = p1 + "(-1*" + p2;
+            outer = outer.Remove(pos, find.Length).Insert(pos, replace);
+            var from = pos + replace.Length - 1;
+            var lvl = 0;
+            for (var i = from; i < outer.Length; i++)
+            {
+                if (outer[i] == '(') lvl++;
+                if (outer[i] == ')')
+                {
+                    lvl--;
+                    if (lvl == 0)
+                    {
+                        outer = outer.Insert(i + 1, ")");
+                        break;
+                    }
+                }
+            }
+            return outer;
+        }
 
         /// <summary>
         /// https://en.wikipedia.org/wiki/Reverse_Polish_notation
@@ -192,8 +323,8 @@ namespace math
 
                         // and either o1 is left-associative and its precedence is less than or equal to that of o2, or
                         // o1 is right associative, and has precedence less than that of o2,
-                        if ((GetAssociative(o1) == Associative.Left && GetPrecedence(o1) <= GetPrecedence(o2))
-                            || (GetAssociative(o1) == Associative.Right && GetPrecedence(o1) < GetPrecedence(o2)))
+                        if (GetAssociative(o1) == Associative.Left && GetPrecedence(o1) <= GetPrecedence(o2)
+                            || GetAssociative(o1) == Associative.Right && GetPrecedence(o1) < GetPrecedence(o2))
                         {
                             // then pop o2 off the operator stack, onto the output queue;
                             stack.Pop();

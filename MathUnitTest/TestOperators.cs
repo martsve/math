@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MathUnitTest
 {
     [TestClass]
-    public class UnitTest1
+    public class TestOperators
     {
         [TestMethod]
         public void TestAddition()
@@ -14,6 +14,7 @@ namespace MathUnitTest
             Assert.AreEqual("1+2+3+4+5+6+7+8+9".Calculate(), 45);
             Assert.AreEqual("1-6+8-4-3-3--2".Calculate(), -5);
         }
+
         [TestMethod]
         public void TestMultiply()
         {
@@ -26,6 +27,7 @@ namespace MathUnitTest
         {
             Assert.AreEqual("4^3".Calculate(), 64);
         }
+
         [TestMethod]
         public void TestPower2()
         {
@@ -38,11 +40,13 @@ namespace MathUnitTest
             Assert.AreEqual("6%3".Calculate(), 0);
             Assert.AreEqual("123325%3".Calculate(), 1);
         }
+
         [TestMethod]
         public void TestFactorial()
         {
             Assert.AreEqual("8!".Calculate(), 40320);
         }
+
         [TestMethod]
         public void TestFactorial2()
         {
@@ -52,8 +56,7 @@ namespace MathUnitTest
         [TestMethod]
         public void TestFactorial3()
         {
-            Assert.IsTrue(Approx("4!!".Calculate(), 6.2044E+23));
-
+            Assert.IsTrue(Approx("4!!".Calculate(), 6.20448401733239E+23));
         }
 
         [TestMethod]
